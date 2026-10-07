@@ -1,0 +1,57 @@
+{
+  "repo": "storytold/photocraft",
+  "status": "ok",
+  "plans_written": 2,
+  "plan_files": [
+    "osc-plans/remove-background.md",
+    "osc-plans/photo-relight.md"
+  ],
+  "dogfooded_general": false,
+  "features": [
+    {
+      "stem": "remove-background",
+      "title": "Remove Background: one-click subject cutout",
+      "summary": "Implement the missing layer.removeBackground engine command so Properties › Quick Actions and Layer › Remove Background isolate the subject in one undoable step (layer mask by default, optional solid fill underneath), using the existing classical subject + refine-edge algorithms.",
+      "why_selected": "Social demand clusters on cutout and backdrop-change workflows (product-on-plain-ground tutorials, 'remove and change backgrounds', amateur editors looking for a replacement stack). The UI already advertises the action and ships translations, but the command does not exist—so this is a small, mergeable PR that makes a dead button real rather than a new surface.",
+      "dup_check": "CLEAN (2026-10-07). storytold/photocraft code search: layer.removeBackground only in props_layout.rs + props_layout_tests.rs ('not implemented yet'). 114 open issues: no cutout/remove-background request (nearest #653 is export of transparent RGB). 49 open PRs: none. Merged #192 added the Quick Action stub only. select.subject and select.refineEdge are live and are composed, not duplicated. #41 is generative/ML and is not this classical path."
+    },
+    {
+      "stem": "photo-relight",
+      "title": "Relight: redirect a photo's lighting",
+      "summary": "Add Filter › Relight… (filter.render.relight): a tiled Retinex + Lambertian kernel with angle, elevation, intensity, ambient, warmth, and softness, live-preview dialog, selection support, smart-filter recording, and identity at intensity 0. Distinct from Lighting Effects, which bump-maps the image as a 3D surface.",
+      "why_selected": "The strongest how-to signal in the social set is photographic lighting-mood edits (high-view clip on moving the light in a shot instead of stacking overlays and masks). That workflow is not covered by Lighting Effects, Camera Raw grade, or Photo Filter. Scoped as one filter command with tests that prove directionality.",
+      "dup_check": "CLEAN (2026-10-07). storytold/photocraft code search for relight/Relight: zero hits. Open issues: no relight request (#650/#634 are 3D model import). Open PRs: none matching. Lighting Effects, Camera Raw dehaze/grade, and Photo Filter are different tools. #41 generative editing does not cover this classical kernel."
+    }
+  ],
+  "quick_fixes": [
+    {
+      "title": "Properties Quick Action for Remove Background is a dead id",
+      "note": "Covered by remove-background plan rather than a separate osc-plan."
+    }
+  ],
+  "social_pass": {
+    "invoked": true,
+    "consumed_handoff": true,
+    "engine": {
+      "kind": "host_handoff",
+      "script": "/home/box/src/open-source-contributor/skills/osc-newfeature/scripts/social_search.py"
+    },
+    "artifact": "uploads/social-storytold-photocraft.json",
+    "status": "ok",
+    "gate": "passed",
+    "signals": {
+      "total": 51,
+      "main": 51,
+      "competitors": 0
+    },
+    "source_coverage": {
+      "searched": ["tiktok", "reddit"],
+      "failed": {
+        "x": "HTTPError: 404",
+        "youtube": "Search timed out"
+      }
+    },
+    "downgrade_consented": false
+  },
+  "skipped_reasons": {}
+}
