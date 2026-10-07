@@ -197,22 +197,17 @@ pub(crate) fn relight(src: &Image, out: Rect, ctx: &Ctx, p: Params) -> Vec<f32> 
         let ndl = (nrm[0] * ldir[0] + nrm[1] * ldir[1] + nrm[2] * ldir[2]).max(0.0);
         let shade = amb + inten * ndl;
         let mut out_c = c;
-        for k in 0..3 {
-            if let Some(ch) = c.get(k).copied() {
-                let v = (ch / s0) * shade * lcol[k];
-                if let Some(slot) = out_c.get_mut(k) {
-                    *slot = v;
-                }
-            }
+        for (k, lc) in lcol.iter().enumerate() {
+            let Some(ch) = c.get(k).copied() else { continue };
+            let Some(slot) = out_c.get_mut(k) else { continue };
+            *slot = (ch / s0) * shade * *lc;
         }
         if !finite_all(&out_c) {
             continue;
         }
         set_rgba(ctx, px, out_c);
-        if ctx.alpha {
-            if let Some(slot) = px.get_mut(n - 1) {
-                *slot = a;
-            }
+        if ctx.alpha && let Some(slot) = px.get_mut(n - 1) {
+            *slot = a;
         }
     }
     res
