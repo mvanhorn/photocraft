@@ -143,7 +143,11 @@ pub(crate) fn relight(src: &Image, out: Rect, ctx: &Ctx, p: Params) -> Vec<f32> 
     }
     let sig = sigma(p.softness, ctx.bounds);
     let radius = (sig * 3.0).ceil() as i32;
-    let s_rect = out.inflate(1);
+    // Finite differences at the shading scale (`σ`), not 1 px: a 1 px step vanishes on
+    // large documents and the lamp collapses to a flat multiply.
+    const SCALE: f32 = 2.0;
+    let step = sig.round().clamp(1.0, 32.0) as i32;
+    let s_rect = out.inflate(step.max(1));
     let y_rect = s_rect.inflate(radius.max(0));
     if y_rect.is_empty() {
         return res;
@@ -176,7 +180,6 @@ pub(crate) fn relight(src: &Image, out: Rect, ctx: &Ctx, p: Params) -> Vec<f32> 
     let lcol = light_color(p.warmth);
     let amb = (if p.ambient.is_finite() { p.ambient } else { 0.0 }).clamp(0.0, 100.0) / 100.0;
     let inten = p.intensity.clamp(0.0, 100.0) / 100.0;
-    const SCALE: f32 = 2.0;
     for (i, px) in res.chunks_exact_mut(n).enumerate() {
         let (x, y) = xy(out, i);
         if !finite_all(px) {
@@ -191,8 +194,8 @@ pub(crate) fn relight(src: &Image, out: Rect, ctx: &Ctx, p: Params) -> Vec<f32> 
             continue;
         }
         let s0 = sample_y(&sbuf, yw, yh, y_rect, x, y).max(0.04);
-        let nx = (sample_y(&sbuf, yw, yh, y_rect, x - 1, y) - sample_y(&sbuf, yw, yh, y_rect, x + 1, y)) * SCALE;
-        let ny = (sample_y(&sbuf, yw, yh, y_rect, x, y - 1) - sample_y(&sbuf, yw, yh, y_rect, x, y + 1)) * SCALE;
+        let nx = (sample_y(&sbuf, yw, yh, y_rect, x - step, y) - sample_y(&sbuf, yw, yh, y_rect, x + step, y)) * SCALE;
+        let ny = (sample_y(&sbuf, yw, yh, y_rect, x, y - step) - sample_y(&sbuf, yw, yh, y_rect, x, y + step)) * SCALE;
         let nrm = norm3([nx, ny, 1.0]);
         let ndl = (nrm[0] * ldir[0] + nrm[1] * ldir[1] + nrm[2] * ldir[2]).max(0.0);
         let shade = amb + inten * ndl;
@@ -347,9 +350,7 @@ mod tests {
         assert_eq!(out.read_region(r), g16.read_region(r));
     }
 
-    #[test]
-    fn direction_flips_on_a_shaded_sphere() {
-        let size = 64;
+    fn assert_direction_flips(size: i32) {
         let bounds = Rect::new(0, 0, size, size);
         let s = shaded_sphere(SampleType::F32, size);
         let left_lit = run(&s, &relight_p(180.0, 30.0, 90.0, 12.0, 0.0, 15.0), bounds);
@@ -358,8 +359,19 @@ mod tests {
         let l_right = sphere_half_mean(&left_lit, size, false);
         let r_left = sphere_half_mean(&right_lit, size, true);
         let r_right = sphere_half_mean(&right_lit, size, false);
-        assert!(l_left - l_right >= 0.05, "light from the left: {l_left} vs {l_right}");
-        assert!(r_right - r_left >= 0.05, "light from the right: {r_left} vs {r_right}");
+        assert!(l_left - l_right >= 0.05, "light from the left ({size}px): {l_left} vs {l_right}");
+        assert!(r_right - r_left >= 0.05, "light from the right ({size}px): {r_left} vs {r_right}");
+    }
+
+    #[test]
+    fn direction_flips_on_a_shaded_sphere() {
+        assert_direction_flips(64);
+    }
+
+    #[test]
+    fn direction_flips_on_a_large_shaded_sphere() {
+        // A 1 px gradient vanishes at this size unless the kernel steps by σ.
+        assert_direction_flips(256);
     }
 
     #[test]
