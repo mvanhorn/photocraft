@@ -206,7 +206,9 @@ pub(crate) fn relight(src: &Image, out: Rect, ctx: &Ctx, p: Params) -> Vec<f32> 
             continue;
         }
         set_rgba(ctx, px, out_c);
-        if ctx.alpha && let Some(slot) = px.get_mut(n - 1) {
+        if ctx.alpha
+            && let Some(slot) = px.get_mut(n - 1)
+        {
             *slot = a;
         }
     }
