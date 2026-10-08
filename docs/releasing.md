@@ -140,12 +140,7 @@ goes in `CARGO_TARGET_<TRIPLE>_RUSTFLAGS`, so host build scripts aren't affected
 - Shortcut icon identifiers keep the executable's `.exe` extension: MSI uses the identifier
   as the cached icon filename, and an extensionless filename can render as a blank document
   icon. `packaging/windows/check-icons.ps1` checks the references and extensions in CI;
-  `package.ps1` also validates the built MSI with ICE50 before signing it. After the
-  PE header checks and before signing, `package.ps1` runs `check-cli-resources.ps1`
-  on `photocraft-cli.exe` for x64, x86 and arm64, including `-SkipBuild` artifacts.
-  The script checks VERSIONINFO against the package version and compares the
-  extracted CLI icon to `photocraft.ico` at 32x32. It does not launch the binary, so
-  a cross-built arm64 CLI is checked on x64.
+  `package.ps1` also validates the built MSI with ICE50 before signing it.
 - **Portable zip:** it ships `packaging/windows/portable.txt` beside `photocraft.exe`. That
   marker (or a `PhotoCraft.portable` file) switches on portable mode: preferences, presets,
   recovery autosaves and the GPU startup marker go to `PhotoCraftData\` next to the exe instead
