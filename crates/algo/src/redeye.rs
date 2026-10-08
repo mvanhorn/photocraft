@@ -247,7 +247,8 @@ pub fn apply(px: &mut [[f32; 4]], w: usize, h: usize, click: (i32, i32), origin:
             let Some(p) = px.get(i).copied() else { continue };
             let dx = origin.0.saturating_add(x as i32).saturating_sub(click.0);
             let dy = origin.1.saturating_add(y as i32).saturating_sub(click.1);
-            if within_search(dx, dy, radius) && is_red_eye(p)
+            if within_search(dx, dy, radius)
+                && is_red_eye(p)
                 && let Some(slot) = hard.get_mut(i)
             {
                 *slot = true;
@@ -438,13 +439,7 @@ mod tests {
     fn tile_seam_matches_an_untiled_reference() {
         let w = 128usize;
         // A red half-plane ending on the 64 px tile boundary: the mask edge is where a short halo fails.
-        let src = sample(w, w, |x, _y| {
-            if x < 64 {
-                [0.95, 0.10, 0.10, 1.0]
-            } else {
-                [0.38, 0.28, 0.16, 1.0]
-            }
-        });
+        let src = sample(w, w, |x, _y| if x < 64 { [0.95, 0.10, 0.10, 1.0] } else { [0.38, 0.28, 0.16, 1.0] });
         let mut reference = src.clone();
         apply(&mut reference, w, w, (60, 64), (0, 0), 50.0, 50.0);
         let tiled = apply_tiled(&src, w, w, (60, 64), 50.0, 50.0, 64, halo_radius());
