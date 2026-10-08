@@ -88,7 +88,9 @@ fn rgba_region(surf: &Surface, area: Rect) -> Vec<[f32; 4]> {
     v
 }
 
-fn write_rgba(surf: &mut Surface, area: Rect, px: &[[f32; 4]]) {
+/// Write back only the pixels whose RGBA changed. Untouched pixels keep their original channel
+/// data, so CMYK (K) and Lab values outside the corrected pupil are never re-encoded.
+fn write_rgba(surf: &mut Surface, area: Rect, before: &[[f32; 4]], px: &[[f32; 4]]) {
     if area.is_empty() {
         return;
     }
@@ -98,25 +100,32 @@ fn write_rgba(surf: &mut Surface, area: Rect, px: &[[f32; 4]]) {
     let h = area.height() as usize;
     let need = w.saturating_mul(h);
     let expect = need.saturating_mul(n);
-    if px.len() < need || n == 0 || expect / n != need {
+    if px.len() < need || before.len() < need || n == 0 || expect / n != need {
         return;
     }
-    let orig = surf.read_region(area);
-    let mut data = vec![0.0f32; expect];
+    let mut data = surf.read_region(area);
+    if data.len() != expect {
+        return;
+    }
     for i in 0..need {
-        let Some(q) = px.get(i) else { continue };
+        let (Some(q), Some(o)) = (px.get(i), before.get(i)) else { continue };
+        if !rgb_changed(o, q) {
+            continue;
+        }
         let Some(out) = data.get_mut(i.saturating_mul(n)..i.saturating_mul(n).saturating_add(n)) else { continue };
+        let alpha = out.last().copied();
         from_rgba_into(&fmt, *q, out);
         if fmt.alpha
-            && let (Some(dst), Some(src)) = (out.last_mut(), orig.get(i.saturating_mul(n).saturating_add(n.saturating_sub(1))))
+            && let (Some(dst), Some(src)) = (out.last_mut(), alpha)
         {
-            *dst = *src;
+            *dst = src;
         }
     }
-    if data.len() != (area.width() as usize).saturating_mul(area.height() as usize).saturating_mul(n) {
-        return;
-    }
     surf.write_region(area, &data);
+}
+
+fn rgb_changed(a: &[f32; 4], b: &[f32; 4]) -> bool {
+    (a[0] - b[0]).abs() > 1e-5 || (a[1] - b[1]).abs() > 1e-5 || (a[2] - b[2]).abs() > 1e-5
 }
 
 fn mix_selection(orig: &[[f32; 4]], px: &mut [[f32; 4]], area: Rect, sel: &Surface) {
@@ -159,11 +168,7 @@ fn restore_locked(orig: &[[f32; 4]], px: &mut [[f32; 4]]) {
 }
 
 fn count_changed(orig: &[[f32; 4]], px: &[[f32; 4]]) -> u32 {
-    let n = orig
-        .iter()
-        .zip(px.iter())
-        .filter(|(a, b)| (a[0] - b[0]).abs() > 1e-5 || (a[1] - b[1]).abs() > 1e-5 || (a[2] - b[2]).abs() > 1e-5)
-        .count();
+    let n = orig.iter().zip(px.iter()).filter(|(a, b)| rgb_changed(a, b)).count();
     u32::try_from(n).unwrap_or(u32::MAX)
 }
 
@@ -190,7 +195,7 @@ fn apply_click(surf: &mut Surface, sel: Option<&Surface>, lock: bool, click: (i3
     if changed == 0 {
         return Ok((area, 0));
     }
-    write_rgba(surf, area, &px);
+    write_rgba(surf, area, &orig, &px);
     Ok((area, changed))
 }
 
@@ -388,6 +393,48 @@ mod tests {
         assert_eq!(s.active().unwrap().history.past_len(), past + 1);
         assert!(rgba(&s, 20, 20)[0] < 0.7);
         assert!(rgba(&s, 60, 20)[0] < 0.7);
+    }
+
+    #[test]
+    fn cmyk_document_keeps_untouched_pixels_bit_exact() {
+        let mut s = session(64, 64, 8, "cmyk");
+        assert_eq!(s.active().unwrap().doc.pixel_format().mode, ColorMode::Cmyk);
+        // Rich black (all four inks) around the eye: a naive RGBA round trip regenerates K.
+        let disc = red_disc(32, 32, 8);
+        s.edit("setup", |doc, active| {
+            let b = doc.bounds();
+            let surf = doc.layer_mut(active.unwrap()).unwrap().surface_mut().unwrap();
+            let fmt = surf.format();
+            let n = fmt.channels();
+            let mut data = Vec::new();
+            for y in b.y0..b.y1 {
+                for x in b.x0..b.x1 {
+                    if (x - 32).abs() <= 10 && (y - 32).abs() <= 10 {
+                        data.extend(photocraft_raster::from_rgba(&fmt, disc(x, y)));
+                    } else {
+                        let mut px = vec![0.6f32, 0.5, 0.5, 0.7];
+                        px.resize(n, 1.0);
+                        data.extend(px);
+                    }
+                }
+            }
+            surf.write_region(b, &data);
+            Ok(())
+        })
+        .unwrap();
+        let raw = |s: &Session, x: i32, y: i32| {
+            let d = s.active().unwrap();
+            let surf = d.doc.layer(d.active_layer.unwrap()).unwrap().surface().unwrap();
+            surf.read_region(Rect::new(x, y, x + 1, y + 1))
+        };
+        let probes = [(32, 18), (2, 2), (50, 40)];
+        let before: Vec<Vec<f32>> = probes.iter().map(|&(x, y)| raw(&s, x, y)).collect();
+        let r = s.execute("paint.redEye", json!({"x": 32, "y": 32})).unwrap();
+        assert!(r["pixels"].as_u64().unwrap() > 0, "{r}");
+        for (&(x, y), b) in probes.iter().zip(&before) {
+            assert_eq!(&raw(&s, x, y), b, "untouched CMYK pixel ({x},{y}) inside the window changed");
+        }
+        assert!(rgba(&s, 32, 26)[0] < 0.7, "pupil corrected");
     }
 
     #[test]
