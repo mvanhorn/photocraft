@@ -1077,7 +1077,7 @@ fn pattern_stamp_rejects_hostile_input() {
     assert!(s.execute("paint.patternStamp", json!({"points": [[16, 16]], "pattern": "Checkerboard", "size": 1e30})).is_err());
     assert!(s.execute("paint.patternStamp", json!({"points": [[1e7, 0]], "pattern": "Checkerboard", "size": 8})).is_err());
     assert!(s.execute("paint.patternStamp", json!({"points": [[f64::NAN, 0]], "pattern": "Checkerboard", "size": 8})).is_err());
-    assert!(s.execute("paint.patternStamp", json!({"points": [[2500, 2500]], "pattern": "Checkerboard", "size": 5000, "hardness": 100})).is_err());
+    assert!(s.execute("paint.patternStamp", json!({"points": [[0, 0], [9000, 9000]], "pattern": "Checkerboard", "size": 5000, "hardness": 100})).is_err());
     let fmt = photocraft_color::PixelFormat::new(photocraft_color::ColorMode::Rgb, photocraft_color::SampleType::U8, false);
     s.patterns.items.push(photocraft_doc::Pattern {
         id: "empty-pat".into(),

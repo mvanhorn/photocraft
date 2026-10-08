@@ -16,9 +16,10 @@ use serde_json::{Value, json};
 use super::{bad, blend_param, damage_json, flag, has_pixel_layer, parse_brush};
 use crate::{Result, Session};
 
-/// A single stroke's accumulated coverage must stay at or under this many pixels (4096²). Larger
-/// footprints return an error instead of allocating.
-const MAX_STROKE_PIXELS: u64 = 16_777_216;
+/// A single stroke's accumulated coverage must stay at or under this many pixels (8192², so a
+/// stroke corner to corner across a 24–36 MP canvas fits). Larger footprints return an error
+/// instead of allocating.
+const MAX_STROKE_PIXELS: u64 = 67_108_864;
 
 const STREAM_PHASE_X: u64 = 101;
 const STREAM_PHASE_Y: u64 = 102;
@@ -288,5 +289,23 @@ fn stamp_dab(
                 }
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn stroke(points: &[(f64, f64)], size: f32) -> Stroke {
+        let brush = photocraft_paint::BrushSettings { size, ..Default::default() };
+        Stroke { brush, points: points.iter().map(|&(x, y)| StrokePoint::new(x, y, 1.0)).collect() }
+    }
+
+    #[test]
+    fn a_diagonal_across_a_24_mp_canvas_is_not_too_large() {
+        assert!(reject_huge_stroke("t", &stroke(&[(0.0, 0.0), (6015.0, 3999.0)], 100.0)).is_ok());
+        assert!(reject_bounds("t", Rect::from_xywh(-60, -60, 6136, 4120)).is_ok());
+        assert!(reject_huge_stroke("t", &stroke(&[(0.0, 0.0), (9000.0, 9000.0)], 100.0)).is_err());
+        assert!(reject_bounds("t", Rect::from_xywh(0, 0, 9000, 9000)).is_err());
     }
 }
