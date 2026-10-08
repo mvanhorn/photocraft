@@ -1,0 +1,46 @@
+{
+  "repo": "storytold/photocraft",
+  "status": "ok",
+  "plans_written": 2,
+  "fork_main_synced_to": "6f39aba7f2d424948d5dd647ba1bad7c1d00b9b0",
+  "features": [
+    {
+      "stem": "red-eye-tool",
+      "title": "Add the Red Eye tool (J-group)",
+      "summary": "Click a red pupil to neutralize the reflection: a new J-flyout tool and paint.redEye command that corrects a window around the click, keeps catchlights, and errors instead of no-op on a miss.",
+      "why_selected": "Standard portrait-retouch tool, completely missing from the J flyout after Patch and Content-Aware Move landed. Real demand from photo-editing users of a desktop raster editor. Small, click-local kernel (not a novel filter). Does not overlap Remove Background or Relight.",
+      "dup_check": "CLEAN 2026-10-08. Open PRs (~62): no Red Eye / paint.redEye. Issues #213 and #794 are other tools. Merged last week: Patch #381, CAM #814, Magnetic Lasso #864, Remove Background #734, Relight #735. rg RedEye/red-eye empty in crates/. Authored open PRs: 0."
+    },
+    {
+      "stem": "pattern-stamp-tool",
+      "title": "Add the Pattern Stamp tool (S-group)",
+      "summary": "Paint with the current Patterns-panel tile: a new S-flyout sibling of Clone Stamp and paint.patternStamp, with Aligned and Impressionist, reusing compose pattern tiling and the retouch stroke path.",
+      "why_selected": "Standard painting tool; the S flyout is currently Clone Stamp alone. Pattern fill already exists, but brush stamping does not. Fits one PR by reusing Tile/Placement/render and run_stroke. Does not overlap round-1 commands.",
+      "dup_check": "CLEAN 2026-10-08. Open PRs: no Pattern Stamp / paint.patternStamp. No issue. Fill-with-pattern and pattern fill layers are different commands. rg PatternStamp/pattern stamp empty. Authored open PRs: 0."
+    }
+  ],
+  "social_pass": {
+    "invoked": true,
+    "status": "ok",
+    "gate": "passed",
+    "provenance": "host_handoff",
+    "signals": { "total": 51, "main": 51, "competitors": 0 },
+    "source_coverage": {
+      "searched": ["tiktok", "reddit"],
+      "failed": {
+        "x": "HTTPError: 404",
+        "youtube": "Search timed out"
+      }
+    },
+    "consumed_from": "uploads/cloud-plan-handoff + social JSON (no engine re-run)"
+  },
+  "skipped_reasons": {},
+  "autonomous_check_inputs": {
+    "PROCESS_LEVEL": "PR_WELCOME",
+    "NO_AI_OPPOSED": true,
+    "NO_COMPETING_PRS": true,
+    "HAS_PRECEDENT": true,
+    "OPEN_PRS_AUTHORED": 0,
+    "REPO_OPEN_PRS_TOTAL": 62
+  }
+}
