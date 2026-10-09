@@ -3514,3 +3514,15 @@ fontWeight	Thin	Πολύ λεπτά
 	Quick Selection found nothing there	Η Γρήγορη επιλογή δεν βρήκε τίποτα εκεί
 	Object Selection found nothing there — try a tighter rectangle	Η Επιλογή αντικειμένου δεν βρήκε τίποτα εκεί — δοκιμάστε ένα πιο στενό ορθογώνιο
 	No subject found — try a rectangle around the object	Δεν βρέθηκε θέμα — δοκιμάστε ένα ορθογώνιο γύρω από το αντικείμενο
+
+# Art History Brush (#213).
+	Art History Brush Tool	Πινέλο ιστορικού τέχνης (Art History Brush Tool)
+	Tight Short	Σφιχτό κοντό
+	Tight Medium	Σφιχτό μεσαίο
+	Tight Long	Σφιχτό μακρύ
+	Loose Medium	Χαλαρό μεσαίο
+	Loose Long	Χαλαρό μακρύ
+	Dab	Πινελιά
+	Tight Curl	Σφιχτή μπούκλα
+	Loose Curl	Χαλαρή μπούκλα
+	Stylized dabs from a history state	Στυλιζαρισμένες πινελιές από μια κατάσταση ιστορικού

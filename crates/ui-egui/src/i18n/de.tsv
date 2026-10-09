@@ -2445,3 +2445,17 @@ fontWeight	Italic	Kursiv
 	Quick Selection found nothing there	Die Schnellauswahl hat dort nichts gefunden
 	Object Selection found nothing there — try a tighter rectangle	Die Objektauswahl hat dort nichts gefunden — versuchen Sie ein engeres Rechteck
 	No subject found — try a rectangle around the object	Kein Motiv gefunden — versuchen Sie ein Rechteck um das Objekt
+
+# Art History Brush (#213).
+	Art History Brush	Künstlerischer Protokollpinsel
+	Art History Brush Tool	Künstlerischer-Protokollpinsel-Werkzeug
+	Tight Short	Eng kurz
+	Tight Medium	Eng mittel
+	Tight Long	Eng lang
+	Loose Medium	Locker mittel
+	Loose Long	Locker lang
+	Dab	Tupfer
+	Tight Curl	Eng gewellt
+	Loose Curl	Locker gewellt
+	Area	Fläche
+	Stylized dabs from a history state	Stilisierte Tupfer aus einem Protokollzustand

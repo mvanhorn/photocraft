@@ -96,6 +96,7 @@ pub enum Tool {
     CloneStamp,
     PatternStamp,
     HistoryBrush,
+    ArtHistoryBrush,
     Blur,
     Sharpen,
     Smudge,
@@ -118,7 +119,7 @@ pub enum Tool {
 }
 
 impl Tool {
-    pub const ALL: [Tool; 53] = [
+    pub const ALL: [Tool; 54] = [
         Tool::Move,
         Tool::RectMarquee,
         Tool::EllipseMarquee,
@@ -153,6 +154,7 @@ impl Tool {
         Tool::CloneStamp,
         Tool::PatternStamp,
         Tool::HistoryBrush,
+        Tool::ArtHistoryBrush,
         Tool::Blur,
         Tool::Sharpen,
         Tool::Smudge,
@@ -212,6 +214,7 @@ impl Tool {
             Tool::CloneStamp => "Clone Stamp Tool",
             Tool::PatternStamp => "Pattern Stamp Tool",
             Tool::HistoryBrush => "History Brush Tool",
+            Tool::ArtHistoryBrush => "Art History Brush Tool",
             Tool::Blur => "Blur Tool",
             Tool::Sharpen => "Sharpen Tool",
             Tool::Smudge => "Smudge Tool",
@@ -250,6 +253,7 @@ impl Tool {
                 | Tool::CloneStamp
                 | Tool::PatternStamp
                 | Tool::HistoryBrush
+                | Tool::ArtHistoryBrush
                 | Tool::Blur
                 | Tool::Sharpen
                 | Tool::Smudge
@@ -276,7 +280,7 @@ impl Tool {
             Tool::Zoom => 'Z',
             Tool::Remove | Tool::SpotHealing | Tool::Healing | Tool::Patch | Tool::ContentAwareMove | Tool::RedEye => 'J',
             Tool::CloneStamp | Tool::PatternStamp => 'S',
-            Tool::HistoryBrush => 'Y',
+            Tool::HistoryBrush | Tool::ArtHistoryBrush => 'Y',
             Tool::Blur | Tool::Sharpen | Tool::Smudge => '\0',
             Tool::Dodge | Tool::Burn | Tool::Sponge => 'O',
             Tool::QuickSelection | Tool::ObjectSelection => 'W',
@@ -580,6 +584,17 @@ pub struct ToolOptions {
     /// Eyedropper › Show Sampling Ring.
     #[serde(default = "yes")]
     pub eyedropper_ring: bool,
+    /// Art History Brush: dab layout, Area (0–100), Tolerance (0–100).
+    #[serde(default = "default_art_history_style")]
+    pub art_history_style: String,
+    #[serde(default = "fifty")]
+    pub art_history_area: f32,
+    #[serde(default = "fifty")]
+    pub art_history_tolerance: f32,
+}
+
+fn default_art_history_style() -> String {
+    "tightMedium".into()
 }
 
 fn yes() -> bool {
@@ -693,6 +708,9 @@ impl Default for ToolOptions {
             eyedropper_size: 1,
             eyedropper_sample: default_eyedropper_sample(),
             eyedropper_ring: true,
+            art_history_style: default_art_history_style(),
+            art_history_area: 50.0,
+            art_history_tolerance: 50.0,
         }
     }
 }
@@ -1128,6 +1146,9 @@ mod tests {
         assert_eq!(Tool::from_name("Mixer Brush Tool"), Some(Tool::MixerBrush));
         assert_eq!(Tool::from_name("redEye"), Some(Tool::RedEye));
         assert_eq!(Tool::from_name("Red Eye Tool"), Some(Tool::RedEye));
+        assert_eq!(Tool::from_name("artHistoryBrush"), Some(Tool::ArtHistoryBrush));
+        assert_eq!(Tool::from_name("Art History Brush"), Some(Tool::ArtHistoryBrush));
+        assert_eq!(Tool::from_name("Art History Brush Tool"), Some(Tool::ArtHistoryBrush));
         assert_eq!(Tool::RedEye.key(), 'J');
         assert!(!Tool::RedEye.is_brushlike());
         assert_eq!(Tool::from_name("patternStamp"), Some(Tool::PatternStamp));
@@ -1139,6 +1160,8 @@ mod tests {
         assert_eq!(Tool::from_name("RotateView"), Some(Tool::RotateView));
         assert_eq!(Tool::from_name("Rotate View Tool"), Some(Tool::RotateView));
         assert_eq!(Tool::RotateView.key(), 'R');
+        assert_eq!(Tool::ArtHistoryBrush.key(), 'Y');
+        assert!(Tool::ArtHistoryBrush.is_brushlike());
         assert_eq!(Tool::from_name("nope"), None);
     }
 

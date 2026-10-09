@@ -2984,3 +2984,16 @@ fontWeight	Italic	기울임
 	Quick Selection found nothing there	빠른 선택으로 해당 위치에서 아무것도 찾지 못했습니다
 	Object Selection found nothing there — try a tighter rectangle	개체 선택으로 해당 위치에서 아무것도 찾지 못했습니다 — 더 좁은 사각형을 사용해 보세요
 	No subject found — try a rectangle around the object	피사체를 찾을 수 없습니다 — 개체 주위에 사각형을 그려 보세요
+
+# Art History Brush (#213).
+	Art History Brush	아트 히스토리 브러시
+	Art History Brush Tool	아트 히스토리 브러시 도구
+	Tight Short	타이트 숏
+	Tight Medium	타이트 미디엄
+	Tight Long	타이트 롱
+	Loose Medium	루즈 미디엄
+	Loose Long	루즈 롱
+	Dab	찍기
+	Tight Curl	타이트 컬
+	Loose Curl	루즈 컬
+	Stylized dabs from a history state	작업 내역 상태에서 양식화된 찍기

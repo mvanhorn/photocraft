@@ -2406,3 +2406,17 @@ fontWeight	Italic	Kurzíva
 	Quick Selection found nothing there	Rychlý výběr zde nic nenašel
 	Object Selection found nothing there — try a tighter rectangle	Výběr objektu zde nic nenašel — zkuste těsnější obdélník
 	No subject found — try a rectangle around the object	Nebyl nalezen žádný objekt — zkuste obdélník kolem objektu
+
+# Art History Brush (#213).
+	Art History Brush	Štětec umělecké historie
+	Art History Brush Tool	Nástroj štětec umělecké historie
+	Tight Short	Těsný krátký
+	Tight Medium	Těsný střední
+	Tight Long	Těsný dlouhý
+	Loose Medium	Volný střední
+	Loose Long	Volný dlouhý
+	Dab	Šmouha
+	Tight Curl	Těsná smyčka
+	Loose Curl	Volná smyčka
+	Area	Oblast
+	Stylized dabs from a history state	Stylizované šmouhy ze stavu historie

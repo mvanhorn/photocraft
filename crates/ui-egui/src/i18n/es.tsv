@@ -2474,3 +2474,17 @@ fontWeight	Italic	Cursiva
 	Quick Selection found nothing there	Selección rápida no encontró nada ahí
 	Object Selection found nothing there — try a tighter rectangle	Selección de objeto no encontró nada ahí — pruebe un rectángulo más ajustado
 	No subject found — try a rectangle around the object	No se encontró ningún sujeto — pruebe un rectángulo alrededor del objeto
+
+# Art History Brush (#213).
+	Art History Brush	Pincel de historia artística
+	Art History Brush Tool	Herramienta Pincel de historia artística
+	Tight Short	Corto apretado
+	Tight Medium	Medio apretado
+	Tight Long	Largo apretado
+	Loose Medium	Medio suelto
+	Loose Long	Largo suelto
+	Dab	Toque
+	Tight Curl	Rizo apretado
+	Loose Curl	Rizo suelto
+	Area	Área
+	Stylized dabs from a history state	Toques estilizados desde un estado del historial

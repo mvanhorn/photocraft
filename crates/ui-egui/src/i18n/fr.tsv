@@ -2825,3 +2825,16 @@ fontWeight	Italic	Italique
 	Quick Selection found nothing there	La Sélection rapide n'a rien trouvé à cet endroit
 	Object Selection found nothing there — try a tighter rectangle	La Sélection d'objet n'a rien trouvé à cet endroit — essayez un rectangle plus serré
 	No subject found — try a rectangle around the object	Aucun sujet trouvé — essayez un rectangle autour de l'objet
+
+# Art History Brush (#213).
+	Art History Brush Tool	Outil Pinceau d'historique artistique
+	Tight Short	Serré court
+	Tight Medium	Serré moyen
+	Tight Long	Serré long
+	Loose Medium	Lâche moyen
+	Loose Long	Lâche long
+	Dab	Touche
+	Tight Curl	Boucle serrée
+	Loose Curl	Boucle lâche
+	Area	Zone
+	Stylized dabs from a history state	Touches stylisées depuis un état d'historique
