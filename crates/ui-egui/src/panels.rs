@@ -3193,7 +3193,7 @@ mod type_flyout_tests {
                 .widgets
                 .layers()
                 .flat_map(|(_, w)| w.iter())
-                .filter(|w| w.rect.size() == Vec2::splat(bx) && w.sense.senses_click())
+                .filter(|w| w.rect.size() == egui::Vec2::splat(bx) && w.sense.senses_click())
                 .map(|w| w.rect)
                 .collect()
         });
