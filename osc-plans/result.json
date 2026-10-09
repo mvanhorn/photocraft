@@ -1,0 +1,134 @@
+{
+  "repo": "storytold/photocraft",
+  "status": "ok",
+  "plans_written": 2,
+  "plan_files": [
+    "osc-plans/rotate-view-tool.md",
+    "osc-plans/art-history-brush.md"
+  ],
+  "fork_sync": {
+    "handoff_claimed": true,
+    "fetched": "upstream/main",
+    "origin_main": "6f39aba7f2d424948d5dd647ba1bad7c1d00b9b0",
+    "upstream_main": "a7f6c2b71c69503c8488122cccedbd135efe3b52",
+    "origin_behind_upstream": 211,
+    "synced": false,
+    "note": "Handoff said the fork main was just synced; after git fetch upstream main, origin/main is 211 commits behind. Discovery used upstream/main. Relight follow-up #895 and Red Eye #1084 are merged on upstream; Pattern Stamp #922 is still open."
+  },
+  "exclude_features_honored": [
+    {"feature": "Remove Background", "pr": 734, "state": "merged"},
+    {"feature": "Relight", "pr": 735, "state": "merged", "follow_up": {"pr": 895, "state": "merged-on-upstream"}},
+    {"feature": "Pattern Stamp", "pr": 922, "state": "open"},
+    {"feature": "Red Eye", "pr": 1084, "state": "merged-on-upstream"}
+  ],
+  "chosen_features": [
+    {
+      "stem": "rotate-view-tool",
+      "title": "Rotate View tool in the Hand flyout",
+      "summary": "Add a Rotate View tool beside Hand so the canvas camera can turn around its centre without changing pixels, with Reset View, 15° Shift constrain, Match Rotation, and the unread trackpad-rotate preference actually read.",
+      "why_selected": "Named in the roadmap missing-tools list and in 'Where we're going' next to Perspective Crop. Match Rotation is stubbed at rotation 0; rotate_view_with_trackpad is unread. Standard navigation tool, not a novel filter. No open issue or PR. Files sit in view/gpu_canvas, away from the Art History paint path.",
+      "dup_check": "CLEAN. 2026-10-09: no open PR/issue for the Rotate View tool. False positives were Image › Rotation previews (#1474, #1459). coygeek feat(ui) series does not include it. Neighbour: merged #1363 Hand Fit Screen buttons.",
+      "score": 9,
+      "deep_rubric_score": 9,
+      "complexity": "M",
+      "source": "novel:theme",
+      "plan_file": "osc-plans/rotate-view-tool.md",
+      "citations": [
+        {"kind": "roadmap", "id": "docs/roadmap.md missing tools + Where we're going item 4"},
+        {"kind": "code", "id": "view_cmds.rs Match Rotation rotation:0 stub"},
+        {"kind": "scorecard", "id": "enhanced_controls.rotate_view_with_trackpad unread"}
+      ],
+      "open_issue_overlap": [],
+      "pre_plan_score": 9,
+      "post_plan_score": 9
+    },
+    {
+      "stem": "art-history-brush",
+      "title": "Art History Brush in the Y-group flyout",
+      "summary": "Add Art History Brush next to History Brush: stylized, oriented dabs sampled from a history state, with Tight/Loose/Dab/Curl styles, Area, and Tolerance, as paint.artHistoryBrush.",
+      "why_selected": "Roadmap missing Y-group companion to an already-shipping History Brush. Standard retouching tool (maintainers preferred those over novel filters). Own algo + retouch_cmds submodule, so it does not share Pattern Stamp (#922) or Red Eye files. Heavy kernel → 24 MP timings and a real tile halo.",
+      "dup_check": "CLEAN. 2026-10-09: no open PR/issue titled Art History. #1040 is live strokes for History Brush/Healing — implementation must only add an enum arm, not restyle live-stroke plumbing. coygeek feat(ui) list does not include it.",
+      "score": 8,
+      "deep_rubric_score": 8,
+      "complexity": "M",
+      "source": "novel:theme",
+      "plan_file": "osc-plans/art-history-brush.md",
+      "citations": [
+        {"kind": "roadmap", "id": "docs/roadmap.md remaining missing tools includes Art History Brush"},
+        {"kind": "code", "id": "Y-group TOOL_SECTIONS is HistoryBrush only; paint.historyBrush exists"}
+      ],
+      "open_issue_overlap": [],
+      "pre_plan_score": 8,
+      "post_plan_score": 8
+    }
+  ],
+  "features": [
+    {
+      "stem": "rotate-view-tool",
+      "title": "Rotate View tool in the Hand flyout",
+      "summary": "Add a Rotate View tool beside Hand so the canvas camera can turn around its centre without changing pixels, with Reset View, 15° Shift constrain, Match Rotation, and the unread trackpad-rotate preference actually read.",
+      "why_selected": "Named in the roadmap missing-tools list and in 'Where we're going'. Match Rotation is stubbed; the trackpad pref is unread. Standard tool, no open issue/PR, files do not overlap Art History.",
+      "dup_check": "CLEAN. No Rotate View tool PR/issue on storytold/photocraft as of 2026-10-09 (upstream a7f6c2b).",
+      "score": 9
+    },
+    {
+      "stem": "art-history-brush",
+      "title": "Art History Brush in the Y-group flyout",
+      "summary": "Add Art History Brush next to History Brush: stylized, oriented dabs sampled from a history state, with Tight/Loose/Dab/Curl styles, Area, and Tolerance, as paint.artHistoryBrush.",
+      "why_selected": "Standard Y-group retouching tool, History Brush already ships, no dedicated issue/PR, separate crates from Rotate View, 24 MP kernel with an explicit halo.",
+      "dup_check": "CLEAN. No Art History PR/issue on storytold/photocraft as of 2026-10-09. Avoid #1040 live-stroke files.",
+      "score": 8
+    }
+  ],
+  "skipped_candidates": [
+    {"title": "Color Sampler", "reason": "open issue #1046 feat(ui): Color Sampler tool and Info panel sample points"},
+    {"title": "Perspective Crop", "reason": "open issues #1043, #1231, #1234, #1375"},
+    {"title": "Horizontal/Vertical Type Mask", "reason": "open issue #1055"},
+    {"title": "Freeform Pen and Curvature Pen", "reason": "open issue #1054"},
+    {"title": "Add/Delete Anchor Point", "reason": "open issue #1044"},
+    {"title": "Color Replacement", "reason": "open issue #1045"},
+    {"title": "Single Row/Column Marquee", "reason": "clean but smaller than Art History; kept as a runner-up"},
+    {"title": "Frame tool", "reason": "layer.new.frameFromLayers already exists; full K-tool is a larger slice"}
+  ],
+  "quick_fixes": [
+    {"title": "Single Row and Single Column Marquee in the M-group", "note": "run /osc-plan — small, no open issue, but not as strong as a full Y-group tool"}
+  ],
+  "autonomous_check_inputs": {
+    "pre_plan_score": 9,
+    "post_plan_score": 9,
+    "PROCESS_LEVEL": "PR_WELCOME",
+    "NO_AI_OPPOSED": true,
+    "NO_COMPETING_PRS": true,
+    "HAS_PRECEDENT": true,
+    "WARMTH_SCORE": 2,
+    "OPEN_PRS_AUTHORED": 1,
+    "REPO_OPEN_PRS_TOTAL": 142,
+    "IS_OWN_PROJECT": false
+  },
+  "social_pass": {
+    "invoked": true,
+    "status": "ok",
+    "gate": "passed",
+    "reason": null,
+    "provenance": "host_handoff",
+    "engine": {
+      "kind": "active_skill",
+      "script": "/home/box/src/open-source-contributor/skills/osc-newfeature/scripts/social_search.py"
+    },
+    "artifact": "/home/ubuntu/.cursor/projects/workspace/uploads/social-storytold-photocraft_d85e.json",
+    "signals": {"total": 90, "main": 90, "competitors": 0},
+    "source_coverage": {
+      "searched": ["tiktok", "youtube", "reddit"],
+      "failed": {
+        "x": "HTTPError: 404 Client Error: Not Found for url: https://api.scrapecreators.com/v1/twitter/search/tweets?query=open+source+photoshop+alternative+image+editor&sort_by=relevance"
+      }
+    },
+    "downgrade_consented": false,
+    "waited": true,
+    "consume": "manual: newfeature_social_handoff.py not present on this VM; schema v2 receipt run.status=ok was copied, engine was not re-run"
+  },
+  "skipped_reasons": {},
+  "proposal_lane": false,
+  "parent_host": "cursor-cloud",
+  "k": 2
+}
